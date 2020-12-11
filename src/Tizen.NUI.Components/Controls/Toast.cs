@@ -73,7 +73,7 @@ namespace Tizen.NUI.Components
 
         /// This will be public opened in tizen_6.0 after ACR done. Before ACR, need to be hidden as inhouse API.
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static Toast FromText(string text, uint duration) 
+        public static Toast FromText(string text, uint duration)
         {
             Toast toast = new Toast();
             toast.Message = text;
@@ -237,8 +237,8 @@ namespace Tizen.NUI.Components
         {
             window = win;
             window.Add(this);
-            this.Position.X = (window.Size.Width - this.Size.Width) / 2;
-            this.Position.Y = (window.Size.Height - this.Size.Height) / 2;
+            this.PositionX = (window.Size.Width - this.Size.Width) / 2;
+            this.PositionY = (window.Size.Height - this.Size.Height) / 2;
             timer.Start();
         }
 
@@ -318,6 +318,9 @@ namespace Tizen.NUI.Components
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override void ApplyStyle(ViewStyle viewStyle)
         {
+            WidthResizePolicy = ResizePolicyType.FitToChildren;
+            HeightResizePolicy = ResizePolicyType.FitToChildren;
+
             base.ApplyStyle(viewStyle);
 
             ToastStyle toastStyle = viewStyle as ToastStyle;
@@ -326,7 +329,17 @@ namespace Tizen.NUI.Components
             {
                 if (null == textLabel)
                 {
-                    textLabel = new TextLabel();
+                    textLabel = new TextLabel()
+                    {
+                        PositionUsesPivotPoint = true,
+                        ParentOrigin = Tizen.NUI.ParentOrigin.Center,
+                        PivotPoint = Tizen.NUI.PivotPoint.Center,
+                        WidthResizePolicy = ResizePolicyType.UseNaturalSize,
+                        HeightResizePolicy = ResizePolicyType.UseNaturalSize,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        TextColor = Color.White,
+                    };
                     this.Add(textLabel);
                 }
                 textLabel.ApplyStyle(toastStyle.Text);
@@ -379,7 +392,17 @@ namespace Tizen.NUI.Components
         {
             if (null == textLabel)
             {
-                textLabel = new TextLabel();
+                textLabel = new TextLabel()
+                {
+                    PositionUsesPivotPoint = true,
+                    ParentOrigin = Tizen.NUI.ParentOrigin.Center,
+                    PivotPoint = Tizen.NUI.PivotPoint.Center,
+                    WidthResizePolicy = ResizePolicyType.UseNaturalSize,
+                    HeightResizePolicy = ResizePolicyType.UseNaturalSize,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextColor = Color.White,
+                };
                 this.Add(textLabel);
             }
 

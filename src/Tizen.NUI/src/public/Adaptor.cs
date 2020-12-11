@@ -38,6 +38,7 @@ namespace Tizen.NUI
     ///
     /// </summary>
     /// <since_tizen> 4 </since_tizen>
+    [Obsolete("Deprecated in API8, will be removed in API10. This is not used anymore, please do not use.")]
     public class Adaptor : Disposable
     {
         private static readonly Adaptor instance = Adaptor.Get();
@@ -51,6 +52,7 @@ namespace Tizen.NUI
         /// </summary>
         /// <remarks>The adaptor has been initialized. This is only valid in the main thread.</remarks>
         /// <since_tizen> 4 </since_tizen>
+        [Obsolete("Deprecated in API8, will be removed in API10. This is not used anymore, please do not use.")]
         public static Adaptor Instance
         {
             get
@@ -64,9 +66,10 @@ namespace Tizen.NUI
         /// </summary>
         /// <param name="wheelEvent">The wheel event.</param>
         /// <since_tizen> 4 </since_tizen>
+        [Obsolete("Deprecated in API8, will be removed in API10. This is not used anymore, please do not use.")]
         public void FeedWheelEvent(Wheel wheelEvent)
         {
-            Interop.Adaptor.Adaptor_FeedWheelEvent(swigCPtr, Wheel.getCPtr(wheelEvent));
+            Interop.Adaptor.FeedWheelEvent(swigCPtr, Wheel.getCPtr(wheelEvent));
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
         }
 
@@ -75,15 +78,16 @@ namespace Tizen.NUI
         /// </summary>
         /// <param name="keyEvent">The key event holding the key information.</param>
         /// <since_tizen> 4 </since_tizen>
+        [Obsolete("Deprecated in API8, will be removed in API10. This is not used anymore, please do not use.")]
         public void FeedKeyEvent(Key keyEvent)
         {
-            Interop.Adaptor.Adaptor_FeedKeyEvent(swigCPtr, Key.getCPtr(keyEvent));
+            Interop.Adaptor.FeedKeyEvent(swigCPtr, Key.getCPtr(keyEvent));
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
         }
 
         internal static Adaptor Get()
         {
-            Adaptor ret = new Adaptor(Interop.Adaptor.Adaptor_Get(), false);
+            Adaptor ret = new Adaptor(Interop.Adaptor.Get(), false);
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
         }
@@ -101,15 +105,20 @@ namespace Tizen.NUI
         ///</remarks>
         internal void SetRenderRefreshRate(uint numberOfVSyncsPerRender)
         {
-            Interop.Adaptor.Adaptor_SetRenderRefreshRate(swigCPtr, numberOfVSyncsPerRender);
+            Interop.Adaptor.SetRenderRefreshRate(swigCPtr, numberOfVSyncsPerRender);
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
         }
 
-        /// This will not be public opened.
+        /// <summary>
+        /// ReleaseSwigCPtr
+        /// </summary>
+        /// <param name="swigCPtr"></param>
+        [Obsolete("Deprecated in API8, will be removed in API10. This is not used anymore, please do not use.")]
+        // This will not be public opened.
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected override void ReleaseSwigCPtr(System.Runtime.InteropServices.HandleRef swigCPtr)
         {
-            Interop.Adaptor.delete_Adaptor(swigCPtr);
+            Interop.Adaptor.DeleteAdaptor(swigCPtr);
         }
 
     }

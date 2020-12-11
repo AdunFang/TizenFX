@@ -30,19 +30,27 @@ namespace Tizen.NUI.BaseComponents
         /// StyleNameProperty (DALi json)
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty StyleNameProperty = BindableProperty.Create("StyleName", typeof(string), typeof(View), string.Empty, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty StyleNameProperty = BindableProperty.Create(nameof(StyleName), typeof(string), typeof(View), string.Empty, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.STYLE_NAME, new Tizen.NUI.PropertyValue((string)newValue));
+                string styleName = (string)newValue;
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.StyleName, new Tizen.NUI.PropertyValue(styleName));
+
+                view.styleName = styleName;
+                view.UpdateStyle();
+                view.ThemeChangeSensitive = true;
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
+
+            if (!string.IsNullOrEmpty(view.styleName)) return view.styleName;
+
             string temp;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.STYLE_NAME).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.StyleName).Get(out temp);
             return temp;
         });
 
@@ -50,19 +58,19 @@ namespace Tizen.NUI.BaseComponents
         /// KeyInputFocusProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty KeyInputFocusProperty = BindableProperty.Create("KeyInputFocus", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty KeyInputFocusProperty = BindableProperty.Create(nameof(KeyInputFocus), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.KEY_INPUT_FOCUS, new Tizen.NUI.PropertyValue((bool)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.KeyInputFocus, new Tizen.NUI.PropertyValue((bool)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             bool temp = false;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.KEY_INPUT_FOCUS).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.KeyInputFocus).Get(out temp);
             return temp;
         });
 
@@ -70,7 +78,7 @@ namespace Tizen.NUI.BaseComponents
         /// BackgroundColorProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create("BackgroundColor", typeof(Color), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -110,7 +118,7 @@ namespace Tizen.NUI.BaseComponents
         /// ColorProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty ColorProperty = BindableProperty.Create("Color", typeof(Color), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty ColorProperty = BindableProperty.Create(nameof(Color), typeof(Color), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -122,13 +130,13 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             Color color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
-            view.GetProperty(Interop.ActorProperty.Actor_Property_COLOR_get()).Get(color);
+            view.GetProperty(Interop.ActorProperty.ColorGet()).Get(color);
             return color;
         });
 
         /// <summary> BackgroundImageProperty </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty BackgroundImageProperty = BindableProperty.Create("BackgroundImage", typeof(string), typeof(View), default(string), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty BackgroundImageProperty = BindableProperty.Create(nameof(BackgroundImage), typeof(string), typeof(View), default(string), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -227,7 +235,7 @@ namespace Tizen.NUI.BaseComponents
         /// BackgroundProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty BackgroundProperty = BindableProperty.Create("Background", typeof(PropertyMap), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty BackgroundProperty = BindableProperty.Create(nameof(Background), typeof(PropertyMap), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -249,7 +257,7 @@ namespace Tizen.NUI.BaseComponents
         /// StateProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty StateProperty = BindableProperty.Create("State", typeof(States), typeof(View), States.Normal, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty StateProperty = BindableProperty.Create(nameof(State), typeof(States), typeof(View), States.Normal, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -278,21 +286,21 @@ namespace Tizen.NUI.BaseComponents
         /// SubStateProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty SubStateProperty = BindableProperty.Create("SubState", typeof(States), typeof(View), States.Normal, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty SubStateProperty = BindableProperty.Create(nameof(SubState), typeof(States), typeof(View), States.Normal, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             string valueToString = "";
             if (newValue != null)
             {
                 valueToString = ((States)newValue).GetDescription<States>();
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SUB_STATE, new Tizen.NUI.PropertyValue(valueToString));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SubState, new Tizen.NUI.PropertyValue(valueToString));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             string temp;
-            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SUB_STATE).Get(out temp) == false)
+            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SubState).Get(out temp) == false)
             {
                 NUILog.Error("subState get error!");
             }
@@ -303,7 +311,7 @@ namespace Tizen.NUI.BaseComponents
         /// TooltipProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty TooltipProperty = BindableProperty.Create("Tooltip", typeof(PropertyMap), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty TooltipProperty = BindableProperty.Create(nameof(Tooltip), typeof(PropertyMap), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -323,7 +331,7 @@ namespace Tizen.NUI.BaseComponents
         /// FlexProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty FlexProperty = BindableProperty.Create("Flex", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty FlexProperty = BindableProperty.Create(nameof(Flex), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -343,19 +351,19 @@ namespace Tizen.NUI.BaseComponents
         /// AlignSelfProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty AlignSelfProperty = BindableProperty.Create("AlignSelf", typeof(int), typeof(View), default(int), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty AlignSelfProperty = BindableProperty.Create(nameof(AlignSelf), typeof(int), typeof(View), default(int), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, FlexContainer.ChildProperty.ALIGN_SELF, new Tizen.NUI.PropertyValue((int)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, FlexContainer.ChildProperty.AlignSelf, new Tizen.NUI.PropertyValue((int)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             int temp = 0;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, FlexContainer.ChildProperty.ALIGN_SELF).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, FlexContainer.ChildProperty.AlignSelf).Get(out temp);
             return temp;
         });
 
@@ -363,19 +371,19 @@ namespace Tizen.NUI.BaseComponents
         /// FlexMarginProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty FlexMarginProperty = BindableProperty.Create("FlexMargin", typeof(Vector4), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty FlexMarginProperty = BindableProperty.Create(nameof(FlexMargin), typeof(Vector4), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, FlexContainer.ChildProperty.FLEX_MARGIN, new Tizen.NUI.PropertyValue((Vector4)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, FlexContainer.ChildProperty.FlexMargin, new Tizen.NUI.PropertyValue((Vector4)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             Vector4 temp = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, FlexContainer.ChildProperty.FLEX_MARGIN).Get(temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, FlexContainer.ChildProperty.FlexMargin).Get(temp);
             return temp;
         });
 
@@ -383,19 +391,19 @@ namespace Tizen.NUI.BaseComponents
         /// CellIndexProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty CellIndexProperty = BindableProperty.Create("CellIndex", typeof(Vector2), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty CellIndexProperty = BindableProperty.Create(nameof(CellIndex), typeof(Vector2), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.CELL_INDEX, new Tizen.NUI.PropertyValue((Vector2)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.CellIndex, new Tizen.NUI.PropertyValue((Vector2)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             Vector2 temp = new Vector2(0.0f, 0.0f);
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.CELL_INDEX).Get(temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.CellIndex).Get(temp);
             return temp;
         });
 
@@ -403,19 +411,19 @@ namespace Tizen.NUI.BaseComponents
         /// RowSpanProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty RowSpanProperty = BindableProperty.Create("RowSpan", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty RowSpanProperty = BindableProperty.Create(nameof(RowSpan), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.ROW_SPAN, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.RowSpan, new Tizen.NUI.PropertyValue((float)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.ROW_SPAN).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.RowSpan).Get(out temp);
             return temp;
         });
 
@@ -423,19 +431,19 @@ namespace Tizen.NUI.BaseComponents
         /// ColumnSpanProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty ColumnSpanProperty = BindableProperty.Create("ColumnSpan", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty ColumnSpanProperty = BindableProperty.Create(nameof(ColumnSpan), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.COLUMN_SPAN, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.ColumnSpan, new Tizen.NUI.PropertyValue((float)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.COLUMN_SPAN).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.ColumnSpan).Get(out temp);
             return temp;
         });
 
@@ -443,7 +451,7 @@ namespace Tizen.NUI.BaseComponents
         /// CellHorizontalAlignmentProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty CellHorizontalAlignmentProperty = BindableProperty.Create("CellHorizontalAlignment", typeof(HorizontalAlignmentType), typeof(View), HorizontalAlignmentType.Left, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty CellHorizontalAlignmentProperty = BindableProperty.Create(nameof(CellHorizontalAlignment), typeof(HorizontalAlignmentType), typeof(View), HorizontalAlignmentType.Left, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             string valueToString = "";
@@ -451,14 +459,14 @@ namespace Tizen.NUI.BaseComponents
             if (newValue != null)
             {
                 valueToString = ((HorizontalAlignmentType)newValue).GetDescription<HorizontalAlignmentType>();
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.CELL_HORIZONTAL_ALIGNMENT, new Tizen.NUI.PropertyValue(valueToString));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.CellHorizontalAlignment, new Tizen.NUI.PropertyValue(valueToString));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             string temp;
-            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.CELL_HORIZONTAL_ALIGNMENT).Get(out temp) == false)
+            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.CellHorizontalAlignment).Get(out temp) == false)
             {
                 NUILog.Error("CellHorizontalAlignment get error!");
             }
@@ -470,7 +478,7 @@ namespace Tizen.NUI.BaseComponents
         /// CellVerticalAlignmentProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty CellVerticalAlignmentProperty = BindableProperty.Create("CellVerticalAlignment", typeof(VerticalAlignmentType), typeof(View), VerticalAlignmentType.Top, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty CellVerticalAlignmentProperty = BindableProperty.Create(nameof(CellVerticalAlignment), typeof(VerticalAlignmentType), typeof(View), VerticalAlignmentType.Top, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             string valueToString = "";
@@ -478,14 +486,14 @@ namespace Tizen.NUI.BaseComponents
             if (newValue != null)
             {
                 valueToString = ((VerticalAlignmentType)newValue).GetDescription<VerticalAlignmentType>();
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.CELL_VERTICAL_ALIGNMENT, new Tizen.NUI.PropertyValue(valueToString));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, TableView.ChildProperty.CellVerticalAlignment, new Tizen.NUI.PropertyValue(valueToString));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             string temp;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.CELL_VERTICAL_ALIGNMENT).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, TableView.ChildProperty.CellVerticalAlignment).Get(out temp);
             {
                 NUILog.Error("CellVerticalAlignment get error!");
             }
@@ -498,7 +506,7 @@ namespace Tizen.NUI.BaseComponents
         /// This needs to be hidden as inhouse API until all applications using it have been updated.  Do not make public.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty WeightProperty = BindableProperty.Create("Weight", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty WeightProperty = BindableProperty.Create(nameof(Weight), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -585,7 +593,7 @@ namespace Tizen.NUI.BaseComponents
         /// FocusableProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty FocusableProperty = BindableProperty.Create("Focusable", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty FocusableProperty = BindableProperty.Create(nameof(Focusable), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null) { view.SetKeyboardFocusable((bool)newValue); }
@@ -600,7 +608,7 @@ namespace Tizen.NUI.BaseComponents
         /// Size2DProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty Size2DProperty = BindableProperty.Create("Size2D", typeof(Size2D), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty Size2DProperty = BindableProperty.Create(nameof(Size2D), typeof(Size2D), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -621,7 +629,7 @@ namespace Tizen.NUI.BaseComponents
         /// OpacityProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty OpacityProperty = BindableProperty.Create("Opacity", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty OpacityProperty = BindableProperty.Create(nameof(Opacity), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
 
@@ -642,7 +650,7 @@ namespace Tizen.NUI.BaseComponents
         /// Position2DProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty Position2DProperty = BindableProperty.Create("Position2D", typeof(Position2D), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty Position2DProperty = BindableProperty.Create(nameof(Position2D), typeof(Position2D), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -662,19 +670,19 @@ namespace Tizen.NUI.BaseComponents
         /// PositionUsesPivotPointProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty PositionUsesPivotPointProperty = BindableProperty.Create("PositionUsesPivotPoint", typeof(bool), typeof(View), true, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty PositionUsesPivotPointProperty = BindableProperty.Create(nameof(PositionUsesPivotPoint), typeof(bool), typeof(View), true, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.POSITION_USES_ANCHOR_POINT, new Tizen.NUI.PropertyValue((bool)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.PositionUsesAnchorPoint, new Tizen.NUI.PropertyValue((bool)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             bool temp = false;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.POSITION_USES_ANCHOR_POINT).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.PositionUsesAnchorPoint).Get(out temp);
             return temp;
         });
 
@@ -682,7 +690,7 @@ namespace Tizen.NUI.BaseComponents
         /// SiblingOrderProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty SiblingOrderProperty = BindableProperty.Create("SiblingOrder", typeof(int), typeof(View), default(int), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty SiblingOrderProperty = BindableProperty.Create(nameof(SiblingOrder), typeof(int), typeof(View), default(int), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             int value;
@@ -731,19 +739,19 @@ namespace Tizen.NUI.BaseComponents
         /// ParentOriginProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty ParentOriginProperty = BindableProperty.Create("ParentOrigin", typeof(Position), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty ParentOriginProperty = BindableProperty.Create(nameof(ParentOrigin), typeof(Position), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.PARENT_ORIGIN, new Tizen.NUI.PropertyValue((Position)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.ParentOrigin, new Tizen.NUI.PropertyValue((Position)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             Position temp = new Position(0.0f, 0.0f, 0.0f);
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.PARENT_ORIGIN).Get(temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.ParentOrigin).Get(temp);
             return temp;
         }
         );
@@ -752,19 +760,19 @@ namespace Tizen.NUI.BaseComponents
         /// PivotPointProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty PivotPointProperty = BindableProperty.Create("PivotPoint", typeof(Position), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty PivotPointProperty = BindableProperty.Create(nameof(PivotPoint), typeof(Position), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.ANCHOR_POINT, new Tizen.NUI.PropertyValue((Position)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.AnchorPoint, new Tizen.NUI.PropertyValue((Position)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             Position temp = new Position(0.0f, 0.0f, 0.0f);
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.ANCHOR_POINT).Get(temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.AnchorPoint).Get(temp);
             return temp;
         });
 
@@ -772,12 +780,12 @@ namespace Tizen.NUI.BaseComponents
         /// SizeWidthProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty SizeWidthProperty = BindableProperty.Create("SizeWidth", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty SizeWidthProperty = BindableProperty.Create(nameof(SizeWidth), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SIZE_WIDTH, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SizeWidth, new Tizen.NUI.PropertyValue((float)newValue));
                 view.WidthSpecification = (int)System.Math.Ceiling((float)newValue);
             }
         },
@@ -785,7 +793,7 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SIZE_WIDTH).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SizeWidth).Get(out temp);
             return temp;
         });
 
@@ -793,12 +801,12 @@ namespace Tizen.NUI.BaseComponents
         /// SizeHeightProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty SizeHeightProperty = BindableProperty.Create("SizeHeight", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty SizeHeightProperty = BindableProperty.Create(nameof(SizeHeight), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SIZE_HEIGHT, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SizeHeight, new Tizen.NUI.PropertyValue((float)newValue));
                 view.HeightSpecification = (int)System.Math.Ceiling((float)newValue);
             }
         },
@@ -806,7 +814,7 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SIZE_HEIGHT).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SizeHeight).Get(out temp);
             return temp;
         });
 
@@ -814,7 +822,7 @@ namespace Tizen.NUI.BaseComponents
         /// PositionProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty PositionProperty = BindableProperty.Create("Position", typeof(Position), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty PositionProperty = BindableProperty.Create(nameof(Position), typeof(Position), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -834,19 +842,19 @@ namespace Tizen.NUI.BaseComponents
         /// PositionXProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty PositionXProperty = BindableProperty.Create("PositionX", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty PositionXProperty = BindableProperty.Create(nameof(PositionX), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.POSITION_X, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.PositionX, new Tizen.NUI.PropertyValue((float)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.POSITION_X).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.PositionX).Get(out temp);
             return temp;
         });
 
@@ -854,19 +862,19 @@ namespace Tizen.NUI.BaseComponents
         /// PositionYProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty PositionYProperty = BindableProperty.Create("PositionY", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty PositionYProperty = BindableProperty.Create(nameof(PositionY), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.POSITION_Y, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.PositionY, new Tizen.NUI.PropertyValue((float)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.POSITION_Y).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.PositionY).Get(out temp);
             return temp;
         });
 
@@ -874,19 +882,19 @@ namespace Tizen.NUI.BaseComponents
         /// PositionZProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty PositionZProperty = BindableProperty.Create("PositionZ", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty PositionZProperty = BindableProperty.Create(nameof(PositionZ), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.POSITION_Z, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.PositionZ, new Tizen.NUI.PropertyValue((float)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.POSITION_Z).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.PositionZ).Get(out temp);
             return temp;
         });
 
@@ -894,7 +902,7 @@ namespace Tizen.NUI.BaseComponents
         /// OrientationProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty OrientationProperty = BindableProperty.Create("Orientation", typeof(Rotation), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty OrientationProperty = BindableProperty.Create(nameof(Orientation), typeof(Rotation), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -914,7 +922,7 @@ namespace Tizen.NUI.BaseComponents
         /// ScaleProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty ScaleProperty = BindableProperty.Create("Scale", typeof(Vector3), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty ScaleProperty = BindableProperty.Create(nameof(Scale), typeof(Vector3), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -934,19 +942,19 @@ namespace Tizen.NUI.BaseComponents
         /// ScaleXProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty ScaleXProperty = BindableProperty.Create("ScaleX", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty ScaleXProperty = BindableProperty.Create(nameof(ScaleX), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SCALE_X, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.ScaleX, new Tizen.NUI.PropertyValue((float)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SCALE_X).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.ScaleX).Get(out temp);
             return temp;
         });
 
@@ -954,19 +962,19 @@ namespace Tizen.NUI.BaseComponents
         /// ScaleYProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty ScaleYProperty = BindableProperty.Create("ScaleY", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty ScaleYProperty = BindableProperty.Create(nameof(ScaleY), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SCALE_Y, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.ScaleY, new Tizen.NUI.PropertyValue((float)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SCALE_Y).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.ScaleY).Get(out temp);
             return temp;
         });
 
@@ -974,19 +982,19 @@ namespace Tizen.NUI.BaseComponents
         /// ScaleZProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty ScaleZProperty = BindableProperty.Create("ScaleZ", typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty ScaleZProperty = BindableProperty.Create(nameof(ScaleZ), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SCALE_Z, new Tizen.NUI.PropertyValue((float)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.ScaleZ, new Tizen.NUI.PropertyValue((float)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             float temp = 0.0f;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SCALE_Z).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.ScaleZ).Get(out temp);
             return temp;
         });
 
@@ -994,7 +1002,7 @@ namespace Tizen.NUI.BaseComponents
         /// NameProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty NameProperty = BindableProperty.Create("Name", typeof(string), typeof(View), string.Empty, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty NameProperty = BindableProperty.Create(nameof(Name), typeof(string), typeof(View), string.Empty, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -1014,7 +1022,7 @@ namespace Tizen.NUI.BaseComponents
         /// SensitiveProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty SensitiveProperty = BindableProperty.Create("Sensitive", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty SensitiveProperty = BindableProperty.Create(nameof(Sensitive), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -1034,19 +1042,19 @@ namespace Tizen.NUI.BaseComponents
         /// LeaveRequiredProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty LeaveRequiredProperty = BindableProperty.Create("LeaveRequired", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty LeaveRequiredProperty = BindableProperty.Create(nameof(LeaveRequired), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.LEAVE_REQUIRED, new Tizen.NUI.PropertyValue((bool)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.LeaveRequired, new Tizen.NUI.PropertyValue((bool)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             bool temp = false;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.LEAVE_REQUIRED).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.LeaveRequired).Get(out temp);
             return temp;
         });
 
@@ -1054,19 +1062,19 @@ namespace Tizen.NUI.BaseComponents
         /// InheritOrientationProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty InheritOrientationProperty = BindableProperty.Create("InheritOrientation", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty InheritOrientationProperty = BindableProperty.Create(nameof(InheritOrientation), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.INHERIT_ORIENTATION, new Tizen.NUI.PropertyValue((bool)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.InheritOrientation, new Tizen.NUI.PropertyValue((bool)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             bool temp = false;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.INHERIT_ORIENTATION).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.InheritOrientation).Get(out temp);
             return temp;
         });
 
@@ -1074,19 +1082,19 @@ namespace Tizen.NUI.BaseComponents
         /// InheritScaleProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty InheritScaleProperty = BindableProperty.Create("InheritScale", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty InheritScaleProperty = BindableProperty.Create(nameof(InheritScale), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.INHERIT_SCALE, new Tizen.NUI.PropertyValue((bool)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.InheritScale, new Tizen.NUI.PropertyValue((bool)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             bool temp = false;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.INHERIT_SCALE).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.InheritScale).Get(out temp);
             return temp;
         });
 
@@ -1094,19 +1102,19 @@ namespace Tizen.NUI.BaseComponents
         /// DrawModeProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty DrawModeProperty = BindableProperty.Create("DrawMode", typeof(DrawModeType), typeof(View), DrawModeType.Normal, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty DrawModeProperty = BindableProperty.Create(nameof(DrawMode), typeof(DrawModeType), typeof(View), DrawModeType.Normal, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.DRAW_MODE, new Tizen.NUI.PropertyValue((int)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.DrawMode, new Tizen.NUI.PropertyValue((int)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             int temp;
-            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.DRAW_MODE).Get(out temp) == false)
+            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.DrawMode).Get(out temp) == false)
             {
                 NUILog.Error("DrawMode get error!");
             }
@@ -1117,19 +1125,19 @@ namespace Tizen.NUI.BaseComponents
         /// SizeModeFactorProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty SizeModeFactorProperty = BindableProperty.Create("SizeModeFactor", typeof(Vector3), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty SizeModeFactorProperty = BindableProperty.Create(nameof(SizeModeFactor), typeof(Vector3), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SIZE_MODE_FACTOR, new Tizen.NUI.PropertyValue((Vector3)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SizeModeFactor, new Tizen.NUI.PropertyValue((Vector3)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             Vector3 temp = new Vector3(0.0f, 0.0f, 0.0f);
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SIZE_MODE_FACTOR).Get(temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SizeModeFactor).Get(temp);
             return temp;
         });
 
@@ -1137,12 +1145,12 @@ namespace Tizen.NUI.BaseComponents
         /// WidthResizePolicyProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty WidthResizePolicyProperty = BindableProperty.Create("WidthResizePolicy", typeof(ResizePolicyType), typeof(View), ResizePolicyType.Fixed, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty WidthResizePolicyProperty = BindableProperty.Create(nameof(WidthResizePolicy), typeof(ResizePolicyType), typeof(View), ResizePolicyType.Fixed, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.WIDTH_RESIZE_POLICY, new Tizen.NUI.PropertyValue((int)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.WidthResizePolicy, new Tizen.NUI.PropertyValue((int)newValue));
                 // Match ResizePolicy to new Layouting.
                 // Parent relative policies can not be mapped at this point as parent size unknown.
                 switch ((ResizePolicyType)newValue)
@@ -1171,7 +1179,7 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             string temp;
-            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.WIDTH_RESIZE_POLICY).Get(out temp) == false)
+            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.WidthResizePolicy).Get(out temp) == false)
             {
                 NUILog.Error("WidthResizePolicy get error!");
             }
@@ -1182,12 +1190,12 @@ namespace Tizen.NUI.BaseComponents
         /// HeightResizePolicyProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty HeightResizePolicyProperty = BindableProperty.Create("HeightResizePolicy", typeof(ResizePolicyType), typeof(View), ResizePolicyType.Fixed, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty HeightResizePolicyProperty = BindableProperty.Create(nameof(HeightResizePolicy), typeof(ResizePolicyType), typeof(View), ResizePolicyType.Fixed, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.HEIGHT_RESIZE_POLICY, new Tizen.NUI.PropertyValue((int)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.HeightResizePolicy, new Tizen.NUI.PropertyValue((int)newValue));
                 // Match ResizePolicy to new Layouting.
                 // Parent relative policies can not be mapped at this point as parent size unknown.
                 switch ((ResizePolicyType)newValue)
@@ -1216,7 +1224,7 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             string temp;
-            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.HEIGHT_RESIZE_POLICY).Get(out temp) == false)
+            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.HeightResizePolicy).Get(out temp) == false)
             {
                 NUILog.Error("HeightResizePolicy get error!");
             }
@@ -1227,21 +1235,21 @@ namespace Tizen.NUI.BaseComponents
         /// SizeScalePolicyProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty SizeScalePolicyProperty = BindableProperty.Create("SizeScalePolicy", typeof(SizeScalePolicyType), typeof(View), SizeScalePolicyType.UseSizeSet, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty SizeScalePolicyProperty = BindableProperty.Create(nameof(SizeScalePolicy), typeof(SizeScalePolicyType), typeof(View), SizeScalePolicyType.UseSizeSet, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             string valueToString = "";
             if (newValue != null)
             {
                 valueToString = ((SizeScalePolicyType)newValue).GetDescription<SizeScalePolicyType>();
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SIZE_SCALE_POLICY, new Tizen.NUI.PropertyValue(valueToString));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.SizeScalePolicy, new Tizen.NUI.PropertyValue(valueToString));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             int temp;
-            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SIZE_SCALE_POLICY).Get(out temp) == false)
+            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.SizeScalePolicy).Get(out temp) == false)
             {
                 NUILog.Error("SizeScalePolicy get error!");
             }
@@ -1252,19 +1260,19 @@ namespace Tizen.NUI.BaseComponents
         /// WidthForHeightProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty WidthForHeightProperty = BindableProperty.Create("WidthForHeight", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty WidthForHeightProperty = BindableProperty.Create(nameof(WidthForHeight), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.WIDTH_FOR_HEIGHT, new Tizen.NUI.PropertyValue((bool)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.WidthForHeight, new Tizen.NUI.PropertyValue((bool)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             bool temp = false;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.WIDTH_FOR_HEIGHT).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.WidthForHeight).Get(out temp);
             return temp;
         });
 
@@ -1272,19 +1280,19 @@ namespace Tizen.NUI.BaseComponents
         /// HeightForWidthProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty HeightForWidthProperty = BindableProperty.Create("HeightForWidth", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty HeightForWidthProperty = BindableProperty.Create(nameof(HeightForWidth), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.HEIGHT_FOR_WIDTH, new Tizen.NUI.PropertyValue((bool)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.HeightForWidth, new Tizen.NUI.PropertyValue((bool)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             bool temp = false;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.HEIGHT_FOR_WIDTH).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.HeightForWidth).Get(out temp);
             return temp;
         });
 
@@ -1292,7 +1300,7 @@ namespace Tizen.NUI.BaseComponents
         /// PaddingProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty PaddingProperty = BindableProperty.Create("Padding", typeof(Extents), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty PaddingProperty = BindableProperty.Create(nameof(Padding), typeof(Extents), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -1312,7 +1320,7 @@ namespace Tizen.NUI.BaseComponents
         /// SizeProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty SizeProperty = BindableProperty.Create("Size", typeof(Size), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty SizeProperty = BindableProperty.Create(nameof(Size), typeof(Size), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -1337,13 +1345,13 @@ namespace Tizen.NUI.BaseComponents
         /// MinimumSizeProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty MinimumSizeProperty = BindableProperty.Create("MinimumSize", typeof(Size2D), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty MinimumSizeProperty = BindableProperty.Create(nameof(MinimumSize), typeof(Size2D), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             Size2D temp = newValue as Size2D;
             if (temp != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.MINIMUM_SIZE, new Tizen.NUI.PropertyValue(temp));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.MinimumSize, new Tizen.NUI.PropertyValue(temp));
             }
             else
             {
@@ -1354,7 +1362,7 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             Size2D temp = new Size2D(0, 0);
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.MINIMUM_SIZE).Get(temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.MinimumSize).Get(temp);
             return temp;
         });
 
@@ -1362,13 +1370,13 @@ namespace Tizen.NUI.BaseComponents
         /// MaximumSizeProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty MaximumSizeProperty = BindableProperty.Create("MaximumSize", typeof(Size2D), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty MaximumSizeProperty = BindableProperty.Create(nameof(MaximumSize), typeof(Size2D), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             Size2D temp = newValue as Size2D;
             if (temp != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.MAXIMUM_SIZE, new Tizen.NUI.PropertyValue(temp));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.MaximumSize, new Tizen.NUI.PropertyValue(temp));
             }
             else
             {
@@ -1379,7 +1387,7 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             Size2D temp = new Size2D(0, 0);
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.MAXIMUM_SIZE).Get(temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.MaximumSize).Get(temp);
             return temp;
         });
 
@@ -1387,19 +1395,19 @@ namespace Tizen.NUI.BaseComponents
         /// InheritPositionProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty InheritPositionProperty = BindableProperty.Create("InheritPosition", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty InheritPositionProperty = BindableProperty.Create(nameof(InheritPosition), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.INHERIT_POSITION, new Tizen.NUI.PropertyValue((bool)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.InheritPosition, new Tizen.NUI.PropertyValue((bool)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             bool temp = false;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.INHERIT_POSITION).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.InheritPosition).Get(out temp);
             return temp;
         });
 
@@ -1407,19 +1415,19 @@ namespace Tizen.NUI.BaseComponents
         /// ClippingModeProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty ClippingModeProperty = BindableProperty.Create("ClippingMode", typeof(ClippingModeType), typeof(View), ClippingModeType.Disabled, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty ClippingModeProperty = BindableProperty.Create(nameof(ClippingMode), typeof(ClippingModeType), typeof(View), ClippingModeType.Disabled, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.CLIPPING_MODE, new Tizen.NUI.PropertyValue((int)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.ClippingMode, new Tizen.NUI.PropertyValue((int)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             int temp = 0;
-            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.CLIPPING_MODE).Get(out temp) == false)
+            if (Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.ClippingMode).Get(out temp) == false)
             {
                 NUILog.Error("ClippingMode get error!");
             }
@@ -1430,19 +1438,19 @@ namespace Tizen.NUI.BaseComponents
         /// InheritLayoutDirectionProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty InheritLayoutDirectionProperty = BindableProperty.Create("InheritLayoutDirection", typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty InheritLayoutDirectionProperty = BindableProperty.Create(nameof(InheritLayoutDirection), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.INHERIT_LAYOUT_DIRECTION, new Tizen.NUI.PropertyValue((bool)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.InheritLayoutDirection, new Tizen.NUI.PropertyValue((bool)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             bool temp = false;
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.INHERIT_LAYOUT_DIRECTION).Get(out temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.InheritLayoutDirection).Get(out temp);
             return temp;
         });
 
@@ -1450,19 +1458,19 @@ namespace Tizen.NUI.BaseComponents
         /// LayoutDirectionProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty LayoutDirectionProperty = BindableProperty.Create("LayoutDirection", typeof(ViewLayoutDirectionType), typeof(View), ViewLayoutDirectionType.LTR, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty LayoutDirectionProperty = BindableProperty.Create(nameof(LayoutDirection), typeof(ViewLayoutDirectionType), typeof(View), ViewLayoutDirectionType.LTR, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.LAYOUT_DIRECTION, new Tizen.NUI.PropertyValue((int)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, View.Property.LayoutDirection, new Tizen.NUI.PropertyValue((int)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
         {
             var view = (View)bindable;
             int temp;
-            if (false == Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.LAYOUT_DIRECTION).Get(out temp))
+            if (false == Tizen.NUI.Object.GetProperty(view.swigCPtr, View.Property.LayoutDirection).Get(out temp))
             {
                 NUILog.Error("LAYOUT_DIRECTION get error!");
             }
@@ -1473,7 +1481,7 @@ namespace Tizen.NUI.BaseComponents
         /// MarginProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty MarginProperty = BindableProperty.Create("Margin", typeof(Extents), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty MarginProperty = BindableProperty.Create(nameof(Margin), typeof(Extents), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
@@ -1493,12 +1501,12 @@ namespace Tizen.NUI.BaseComponents
         /// UpdateSizeHintProperty
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty UpdateSizeHintProperty = BindableProperty.Create("UpdateSizeHint", typeof(Vector2), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
+        public static readonly BindableProperty UpdateSizeHintProperty = BindableProperty.Create(nameof(UpdateSizeHint), typeof(Vector2), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             if (newValue != null)
             {
-                Tizen.NUI.Object.SetProperty(view.swigCPtr, Interop.ViewProperty.View_Property_UPDATE_SIZE_HINT_get(), new Tizen.NUI.PropertyValue((Vector2)newValue));
+                Tizen.NUI.Object.SetProperty(view.swigCPtr, Interop.ViewProperty.UpdateSizeHintGet(), new Tizen.NUI.PropertyValue((Vector2)newValue));
             }
         },
         defaultValueCreator: (bindable) =>
@@ -1506,7 +1514,7 @@ namespace Tizen.NUI.BaseComponents
             var view = (View)bindable;
 
             Vector2 temp = new Vector2(0.0f, 0.0f);
-            Tizen.NUI.Object.GetProperty(view.swigCPtr, Interop.ViewProperty.View_Property_UPDATE_SIZE_HINT_get()).Get(temp);
+            Tizen.NUI.Object.GetProperty(view.swigCPtr, Interop.ViewProperty.UpdateSizeHintGet()).Get(temp);
             return temp;
         });
 
@@ -1559,7 +1567,8 @@ namespace Tizen.NUI.BaseComponents
         public static readonly BindableProperty CornerRadiusProperty = BindableProperty.Create(nameof(CornerRadius), typeof(float), typeof(View), default(float), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
-            view.UpdateCornerRadius((float)newValue);
+            (view.backgroundExtraData ?? (view.backgroundExtraData = new BackgroundExtraData())).CornerRadius = (float)newValue;
+            view.ApplyCornerRadius();
         },
         defaultValueCreator: (bindable) =>
         {
@@ -1568,10 +1577,23 @@ namespace Tizen.NUI.BaseComponents
         });
 
         /// <summary>
-        /// XamlStyleProperty
+        /// CornerRadiusPolicy Property
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly BindableProperty XamlStyleProperty = BindableProperty.Create("XamlStyle", typeof(Style), typeof(View), default(Style), propertyChanged: (bindable, oldvalue, newvalue) => ((View)bindable)._mergedStyle.Style = (Style)newvalue);
+        public static readonly BindableProperty CornerRadiusPolicyProperty = BindableProperty.Create(nameof(CornerRadiusPolicy), typeof(VisualTransformPolicyType), typeof(View), VisualTransformPolicyType.Absolute, propertyChanged: (bindable, oldValue, newValue) =>
+        {
+            var view = (View)bindable;
+            (view.backgroundExtraData ?? (view.backgroundExtraData = new BackgroundExtraData())).CornerRadiusPolicy = (VisualTransformPolicyType)newValue;
+            if (view.backgroundExtraData.CornerRadius != 0)
+            {
+                view.ApplyCornerRadius();
+            }
+        },
+        defaultValueCreator: (bindable) =>
+        {
+            var view = (View)bindable;
+            return view.backgroundExtraData == null ? VisualTransformPolicyType.Absolute : view.backgroundExtraData.CornerRadiusPolicy;
+        });
 
         /// <summary>
         /// EnableControlState property
@@ -1600,11 +1622,38 @@ namespace Tizen.NUI.BaseComponents
             return ((View)bindable).enableControlState;
         });
 
+        /// <summary>
+        /// ThemeChangeSensitive property
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static readonly BindableProperty ThemeChangeSensitiveProperty = BindableProperty.Create(nameof(ThemeChangeSensitive), typeof(bool), typeof(View), false, propertyChanged: (bindable, oldValue, newValue) =>
+        {
+            var view = (View)bindable;
+
+            if (view.themeChangeSensitive == (bool)newValue) return;
+
+            view.themeChangeSensitive = (bool)newValue;
+
+            if (view.themeChangeSensitive)
+            {
+                ThemeManager.ThemeChangedInternal.Add(view.OnThemeChanged);
+            }
+            else
+            {
+                ThemeManager.ThemeChangedInternal.Remove(view.OnThemeChanged);
+            }
+        },
+        defaultValueCreator: (bindable) =>
+        {
+            return ((View)bindable).themeChangeSensitive;
+        });
+
         #region Selectors
         internal static readonly BindableProperty BackgroundImageSelectorProperty = BindableProperty.Create("BackgroundImageSelector", typeof(Selector<string>), typeof(View), null, propertyChanged: (bindable, oldValue, newValue) =>
         {
             var view = (View)bindable;
             view.SelectorData.BackgroundImage.Update(view, (Selector<string>)newValue, true);
+            if (newValue != null) view.SelectorData.BackgroundColor.Reset(view);
         },
         defaultValueCreator: (bindable) =>
         {
@@ -1616,6 +1665,7 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             view.SelectorData.BackgroundColor.Update(view, (Selector<Color>)newValue, true);
+            if (newValue != null) view.SelectorData.BackgroundImage.Reset(view);
         },
         defaultValueCreator: (bindable) =>
         {
@@ -1664,6 +1714,7 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             view.SelectorData.ImageShadow.Update(view, (Selector<ImageShadow>)newValue, true);
+            if (newValue != null) view.SelectorData.BoxShadow.Reset(view);
         },
         defaultValueCreator: (bindable) =>
         {
@@ -1679,6 +1730,7 @@ namespace Tizen.NUI.BaseComponents
         {
             var view = (View)bindable;
             view.SelectorData.BoxShadow.Update(view, (Selector<Shadow>)newValue, true);
+            if (newValue != null) view.SelectorData.ImageShadow.Reset(view);
         },
         defaultValueCreator: (bindable) =>
         {
