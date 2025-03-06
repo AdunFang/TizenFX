@@ -32,7 +32,7 @@ namespace Tizen.NUI
         /// </summary>
         /// <param name="vectorValue">Size2D values.</param>
         /// <since_tizen> 3 </since_tizen>
-        public PropertyValue(Size2D vectorValue) : this(Interop.PropertyValue.NewPropertyValueVector2(Size2D.getCPtr(vectorValue)), true)
+        public PropertyValue(Size2D vectorValue) : this(Interop.PropertyValue.NewPropertyValueVector2Componentwise(vectorValue.Width, vectorValue.Height), true)
         {
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
         }
@@ -552,7 +552,8 @@ namespace Tizen.NUI
             }
             else if (type.Equals(typeof(Size2D)))
             {
-                value = Interop.PropertyValue.NewPropertyValueVector2(Size2D.getCPtr((Size2D)obj));
+                var size = obj as Size2D;
+                value = Interop.PropertyValue.NewPropertyValueVector2Componentwise(size.Width, size.Height);
             }
             else if (type.Equals(typeof(Color)))
             {
@@ -630,8 +631,14 @@ namespace Tizen.NUI
         /// <since_tizen> 3 </since_tizen>
         public bool Get(Size2D vectorValue)
         {
-            bool ret = Interop.PropertyValue.GetVector2(SwigCPtr, Size2D.getCPtr(vectorValue));
-            if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
+            if (null == vectorValue)
+            {
+                throw new ArgumentNullException(nameof(vectorValue));
+            }
+
+            var ret = GetVector2Component(out var w, out var h);
+            vectorValue.ResetValue((int)w, (int)h);
+
             return ret;
         }
 
